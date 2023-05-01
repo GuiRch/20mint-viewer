@@ -15,14 +15,9 @@ import { useAccount, useConnect, useDisconnect, useSignMessage, useNetwork } fro
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 // Auth Component
-// ========================================================
 const AuthShowcase: React.FC = () => {
   // Hooks
   const { data: sessionData } = useSession();
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined },
-  );
   // State
   const [showConnection, setShowConnection] = useState(false);
 
@@ -36,9 +31,6 @@ const AuthShowcase: React.FC = () => {
   const { chain } = useNetwork();
 
   // Functions
-  /**
-   * Attempts SIWE and establish session
-   */
   const onClickSignIn = async () => {
     try {
       const message = new SiweMessage({
@@ -64,9 +56,6 @@ const AuthShowcase: React.FC = () => {
     }
   };
 
-  /**
-   * Sign user out
-   */
   const onClickSignOut = async () => {
     await signOut();
   };
@@ -89,11 +78,7 @@ const AuthShowcase: React.FC = () => {
               <label className="block text-white/80 mb-2">Logged in as</label>
               <code className="block p-4 text-white bg-black/20 rounded">{JSON.stringify(sessionData)}</code>
             </div>: null}
-            {/* {secretMessage ? <p className="mb-4">
-              <label className="block text-white/80 mb-2">Secret Message</label>
-              <code className="block p-4 text-white bg-black/20 rounded">{secretMessage}</code>
-            </p>: null} */}
-
+            
             <button
               className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
               onClick={onClickSignOut as () => void}
@@ -136,12 +121,7 @@ const AuthShowcase: React.FC = () => {
 };
 
 // Page Component
-// ========================================================
 const Home: NextPage = () => {
-  // Requests
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
-  // Render
   return (
     <>
       <Head>
@@ -156,13 +136,8 @@ const Home: NextPage = () => {
           </h1>
           <div className="flex flex-col items-center gap-2">
             <div className="block mb-4 h-10">
-              {/* HERE - new todo link */}
-              {/* <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/todos">(Protected) Todos Page</Link> */}
               <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/collection">(Protected) View 20mint collection</Link>
             </div>
-            <p className="text-2xl text-white block mb-4">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </p>
             <AuthShowcase />
           </div>
         </div>
@@ -171,6 +146,4 @@ const Home: NextPage = () => {
   );
 };
 
-// Exports
-// ========================================================
 export default Home;

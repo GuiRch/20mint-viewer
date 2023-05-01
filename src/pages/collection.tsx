@@ -46,24 +46,21 @@ const Collection: NextPage = () => {
     isLoading: addNewLikedNftIsLoading,
   } = api.nfts.createLikedNft.useMutation({
     onSuccess: async (result) => {
-        // console.log("data returned", result)
         await nftsAllRefetch();
     }
   });
-
+  // - Disconnect Nft and user when unlike
   const {
     mutate: disconnectNftFromUserMutate,
     isLoading: disconnectNftFromUserIsLoading,
   } = api.nfts.disconnectLikedNft.useMutation({
     onSuccess: async (result) => {
-        // console.log("data returned", result)
         await nftsAllRefetch();
     }
   })
   
 
   useEffect(() => {
-    // console.log({ nftsAllData });
     if (nftsAllIsLoading) return;
     setLikedNfts(nftsAllData.likes || []);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,7 +89,6 @@ const Collection: NextPage = () => {
                 addLikedNft(props.nft);
                 setIsLiked(true)
             }
-            // setIsLiked((prevLiked) => !prevLiked);
         };
 
         
@@ -105,6 +101,7 @@ const Collection: NextPage = () => {
                 imageUrl: nft.image,
                 ipfsImage: nft.ipfsImage,
               };
+              console.log(newLikedNft)
             addNewLikedNftMutate(newLikedNft)
           };
         const removeLikedNft = () => {
@@ -175,8 +172,6 @@ const Pagination = () => {
       )
   };
 
-  const JSONsessionData = JSON.stringify(sessionData)
-
   return (
     <>
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
@@ -187,11 +182,10 @@ const Pagination = () => {
           </div>
           <div className="block mb-4 h-10">
             <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/">Home Page</Link>
+            <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/ranking">See most liked Nfts</Link>
           </div>
 
           {sessionData ? <div className="w-full flex justify-center items-center flex-col">
-            {/* <div className="text-white">{console.log(nftForId.data)}</div> */}
-            {/* <div className="text-white">{JSONsessionData}</div> */}
             {likedNfts.length === 0
                 ? <p className="text-white">(No likedNfts yet!)</p>
                 : <ul className="w-full max-w-md block">

@@ -7,13 +7,15 @@ import {
 
 // Router
 export const rankingRouter = createTRPCRouter({
-  /**
-   * All todos belonging to the session user
-   */
-  all: protectedProcedure.query(async ({ ctx }) => {
-    const nfts = await ctx.prisma.user.findFirst({
-      where: { id: ctx.session.user.id },
-      select: {
+  // Get all the liked Nfts and include the 
+  getLikedNfts: protectedProcedure.query(async ({ ctx }) => {
+    const nfts = await ctx.prisma.nft.findMany({
+      include: {
+        _count: {
+            select: {
+                likes: true,
+            }
+        },
         likes: true
       }
     });

@@ -56,7 +56,7 @@ export const collectionRouter = createTRPCRouter({
           address: input.address,
           name: input.name, 
           description: input.description,
-          imageUrl: input.image,
+          imageUrl: input.imageUrl,
           ipfsImage: input.ipfsImage,
           likes: {connect : {id : ctx.session.user.id}}
         },

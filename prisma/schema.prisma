@@ -14,17 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// Revised Example table
-model Todo {
-    id        String   @id @default(cuid())
-    task    String
-    userId            String
-    completed   Boolean @default(false)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -52,7 +41,6 @@ model User {
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    todos   Todo[]
     likes   Nft[]
 }
 
