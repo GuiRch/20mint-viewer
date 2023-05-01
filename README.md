@@ -2,10 +2,38 @@
 
 ## Run the code
 
+First of all, before testing the code make sure you have metamask installed.
+
+Clone this repository on your computer :
 
 ```shell
 
+git clone https://github.com/GuiRch/20mint-viewer.git
+
 ```
+
+Add at the root of the project a `.env` file. Paste this code:
+
+```
+DATABASE_URL="file:./db.sqlite"
+
+NEXTAUTH_SECRET="averyverylongpassword"
+NEXTAUTH_URL="http://localhost:3000"
+
+API_KEY=<your-alchemy-api-key>
+```
+
+Now that you have everything setup run the commands :
+
+```shell
+npx prisma migrate dev
+npm run dev
+```
+
+Now everything should be OK and you can see the application on `http://localhost:3000`
+
+You can also consult the database on your browser with the prisma command: `npx prisma studio`
+
 
 ## Creation of the project
 
