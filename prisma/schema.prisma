@@ -14,10 +14,15 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
+// Revised Example table
+model Todo {
     id        String   @id @default(cuid())
+    task    String
+    userId            String
+    completed   Boolean @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Necessary for Next auth
@@ -38,29 +43,28 @@ model Account {
 
     @@unique([provider, providerAccountId])
 }
-
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model User {
     id            String    @id @default(cuid())
     name          String?
+    // New address
+    address         String?   @unique
     email         String?   @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
-    sessions      Session[]
+    todos   Todo[]
+    likes   Nft[]
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
-
-    @@unique([identifier, token])
+model Nft {
+    id        String   @id @default(cuid())
+    tokenId    String? @unique
+    imageUrl   String?
+    ipfsImage  String?
+    address    String?
+    name            String?
+    description     String? 
+    likes      User[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

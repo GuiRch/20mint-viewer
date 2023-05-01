@@ -1,4 +1,28 @@
-# Create T3 App
+# Junior Developer Test Assessment
+
+## Run the code
+
+## Creation of the project
+
+This repository is the second version of the test assesment. 
+In the first version I started directly with the implementation of the NFT display. Using the Alchemy API I was able to quickly display the NFTs of the 20Mint collection. But I quickly ran into an obstacle when I wanted to implement the authentication with the metamask wallet and Next-auth library. While looking for solutions I found a very complete [article](https://codingwithmanny.medium.com/combine-sign-in-with-ethereum-with-create-t3-app-8f54604caeeb) explaining how to create a full-stack web3 application using t3-app.
+I quickly decided to start the project from scratch with a more solid base.
+
+## How does the App works ?
+
+The T3-app template provide a minimal project with several librairies already installed:
+
+- [Next.js](https://nextjs.org)
+- [NextAuth.js](https://next-auth.js.org)
+- [Prisma](https://prisma.io)
+- [Tailwind CSS](https://tailwindcss.com)
+- [tRPC](https://trpc.io)
+
+We use NextAuth to handle authentication, Prisma to handle database managment and tRCP for routing.
+
+### Authentication
+### Database
+### Routing
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
