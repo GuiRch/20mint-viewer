@@ -5,7 +5,7 @@ import Link from "next/link";
 import { type NextPage } from "next";
 // React
 import React, { useState, useEffect } from "react";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart, FaArrowRight, FaHome } from "react-icons/fa";
 // Next-auth
 import { useSession } from "next-auth/react";
 // Utils
@@ -31,13 +31,9 @@ const Collection: NextPage = () => {
     isLoading: nftsAllIsLoading,
     refetch: nftsAllRefetch
   } = api.nfts.all.useQuery(
-    undefined, // no input
     {
       // Disable request if no session data
       enabled: sessionData?.user !== undefined,
-      onSuccess: () => {
-        setNewNft(''); // reset input form
-      }
     },
   );
   // - Add new Nft or update existing Nft
@@ -86,38 +82,30 @@ const Collection: NextPage = () => {
                 disconnectNftFromUserMutate({ tokenId: props.tokenId });
                 setIsLiked(false)
             } else {
-                addLikedNft(props.nft);
-                setIsLiked(true)
+              const newLikedNft = {
+                tokenId: props.nft.tokenId,
+                address: props.nft.address,
+                name: props.nft.name, 
+                description: props.nft.description,
+                imageUrl: props.nft.image,
+                ipfsImage: props.nft.ipfsImage,
+              };
+              addNewLikedNftMutate(newLikedNft)
+              setIsLiked(true)
             }
         };
 
-        
-        const addLikedNft = async (nft) => {
-            const newLikedNft = {
-                tokenId: nft.tokenId,
-                address: nft.address,
-                name: nft.name, 
-                description: nft.description,
-                imageUrl: nft.image,
-                ipfsImage: nft.ipfsImage,
-              };
-              console.log(newLikedNft)
-            addNewLikedNftMutate(newLikedNft)
-          };
-        const removeLikedNft = () => {
-            console.log('remove the nft to the list of likes and remove the user from the list of the nft')
-        };
-    
         return (
             <div className={styles.card}>
                 <img src={props.nft.image} alt={props.nft.name} style={{width: 200, height: 300}}  />
-                <p>{props.nft.name}</p>
-                <p>{props.tokenId}</p>
-                {isLiked ? (
-                <FaHeart onClick={handleLike}></FaHeart>
-                ) : (
-                <FaRegHeart onClick={handleLike}></FaRegHeart>
-                )}
+                <div className="flex justify-between px-2 py-2 items-center">
+                  <p>{props.nft.name}</p>
+                  {isLiked ? (
+                  <FaHeart onClick={handleLike} className="cursor-pointer w-6 h-6"></FaHeart>
+                  ) : (
+                  <FaRegHeart onClick={handleLike} className="cursor-pointer w-6 h-6"></FaRegHeart>
+                  )}
+                </div>
             </div>
         );
     };
@@ -125,7 +113,7 @@ const Collection: NextPage = () => {
   const NFTCardGrid = (props) => {
     return (
       <div className={styles.grid}>
-          {props.nfts.map((nft) => (
+          {props.nfts.map((nft, key) => (
             <div key={nft.tokenId}>
               <NFTCard nft={nft} tokenId={nft.tokenId}></NFTCard>
             </div>
@@ -144,7 +132,7 @@ const Pagination = () => {
     }, [nfts]);
   
     return (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mb-5">
           <button 
             className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700 cursor-pointer'}`} 
             onClick={() => currentPage !== 1 && setCurrentPage(currentPage - 1)} 
@@ -173,32 +161,36 @@ const Pagination = () => {
   };
 
   return (
-    <>
-        <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-          <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-            <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-              {!sessionData ? 'Access Denied' : '20Mint Collection'}
-            </h1>
-          </div>
-          <div className="block mb-4 h-10">
-            <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/">Home Page</Link>
-            <Link className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/ranking">See most liked Nfts</Link>
-          </div>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+          {!sessionData ? 'Access Denied' : '20Mint Collection'}
+        </h1>
+      </div>
+      <div className="container flex justify-around mb-5 ">
+        <Link className="flex items-center space-x-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/">
+          <FaHome></FaHome>
+          <p>Home Page</p>
+        </Link>
+        <Link className="flex items-center space-x-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" href="/ranking">
+          <p>See most liked Nfts </p>
+          <FaArrowRight></FaArrowRight>
+        </Link>
+      </div>
 
-          {sessionData ? <div className="w-full flex justify-center items-center flex-col">
-            {likedNfts.length === 0
-                ? <p className="text-white">(No likedNfts yet!)</p>
-                : <ul className="w-full max-w-md block">
-                {likedNfts.map((nft, key) => 
-                    <p className="text-white"></p>
-                )}
-                </ul>
-            }
-            <Pagination></Pagination>
-            {isLoading ? (<div>Loading ...</div>) : (<NFTCardGrid nfts={nfts} ></NFTCardGrid>)}
-          </div> : null}
-        </main>
-    </>
+      {sessionData ? <div className="w-full flex justify-center items-center flex-col">
+        {likedNfts.length === 0
+            ? <p className="text-white">(No likedNfts yet!)</p>
+            : <ul className="w-full max-w-md block">
+            {likedNfts.map((nft, key) => 
+                <p className="text-white"></p>
+            )}
+            </ul>
+        }
+        <Pagination></Pagination>
+        {isLoading ? (<div>Loading ...</div>) : (<NFTCardGrid nfts={nfts} ></NFTCardGrid>)}
+      </div> : null}
+    </main>
   )
 }
 

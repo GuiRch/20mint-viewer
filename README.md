@@ -105,7 +105,6 @@ Here is what I wish for the future on this part:
 Some features are not yet implemented:
 
 * View each nft individually and see its attributes
-* The ranking still displays NFTs with 0 likes
 * Implement research functions
 * Improve the pagination component, for better UX
 

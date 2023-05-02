@@ -12,8 +12,6 @@ export const getAllNFTs = async (contractAddress: string, omitMetadata: boolean,
   try {
     const { nfts } = await alchemy.nft.getNftsForContract(contractAddress, { omitMetadata: omitMetadata, pageKey: pageKey });
 
-    // console.log({nfts})
-
     const nftObjects = nfts.map((nft) => ({
       tokenId: nft.tokenId,
       name: nft.rawMetadata.name,
